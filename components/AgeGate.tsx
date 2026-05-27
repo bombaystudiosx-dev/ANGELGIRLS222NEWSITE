@@ -69,7 +69,7 @@ export default function AgeGate({ onVerified }: AgeGateProps) {
         style={{ backgroundImage: 'url(/age-gate-bg.jpg)', backgroundAttachment: 'fixed' }} 
       />
 
-      <div className="max-w-md w-full glass-panel border border-[#FF2E88]/20 bg-neutral-950/80 rounded-2xl p-8 text-center space-y-6 relative shadow-[0_0_50px_rgba(255,46,136,0.15)]">
+      <div className="max-w-md w-full glass-panel border border-[#FF2E88]/20 bg-black/40 backdrop-blur-sm rounded-2xl p-8 text-center space-y-6 relative shadow-[0_0_50px_rgba(255,46,136,0.15)]">
         {/* Highlight branding glow */}
         <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-accent/25 blur-2xl pointer-events-none" />
         
