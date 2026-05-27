@@ -66,10 +66,10 @@ export default function AgeGate({ onVerified }: AgeGateProps) {
       {/* Immersive background image */}
       <div 
         className="absolute inset-0 w-full h-full bg-cover bg-center -z-20 select-none" 
-        style={{ backgroundImage: 'url(/age-gate-bg.jpg)' }} 
+        style={{ backgroundImage: 'url(/age-gate-bg.jpg)', backgroundAttachment: 'fixed' }} 
       />
       {/* Highly customized atmospheric dark vignette/glass overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/75 to-neutral-950/90 backdrop-blur-xl -z-10" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/60 backdrop-blur-sm -z-10" />
 
       <div className="max-w-md w-full glass-panel border border-[#FF2E88]/20 bg-neutral-950/80 rounded-2xl p-8 text-center space-y-6 relative shadow-[0_0_50px_rgba(255,46,136,0.15)]">
         {/* Highlight branding glow */}
