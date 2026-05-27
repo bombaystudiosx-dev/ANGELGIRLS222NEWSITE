@@ -5,8 +5,6 @@
 
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-// @ts-ignore
-import gateBg from '../assets/images/gate_background_1779823298841.png';
 
 interface AgeGateProps {
   onVerified: () => void;
@@ -67,8 +65,8 @@ export default function AgeGate({ onVerified }: AgeGateProps) {
     >
       {/* Immersive background image */}
       <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center -z-20 select-none scale-105" 
-        style={{ backgroundImage: `url(${gateBg})` }} 
+        className="absolute inset-0 w-full h-full bg-cover bg-center -z-20 select-none" 
+        style={{ backgroundImage: 'url(/age-gate-bg.jpg)' }} 
       />
       {/* Highly customized atmospheric dark vignette/glass overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/75 to-neutral-950/90 backdrop-blur-xl -z-10" />

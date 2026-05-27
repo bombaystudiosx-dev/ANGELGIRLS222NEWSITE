@@ -262,6 +262,15 @@ export default function App() {
     navigateTo('home');
   };
 
+  // Don't render the site until age is verified
+  if (ageVerified !== true) {
+    return (
+      <div className="relative min-h-screen bg-[#07070A] text-white font-sans overflow-x-hidden selection:bg-accent selection:text-white">
+        <AgeGate onVerified={handleAgeVerified} />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-[#07070A] text-white font-sans overflow-x-hidden selection:bg-accent selection:text-white">
       
@@ -295,13 +304,6 @@ export default function App() {
 
       {/* Real-time Ambient Darkening Vignette Layer */}
       <div className="fixed inset-0 w-full h-full pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#07070a75] to-[#07070Ae6] -z-10" />
-
-      {/* Interactive Age Verification gate Blocking Layer */}
-      <AnimatePresence>
-        {ageVerified === false && (
-          <AgeGate onVerified={handleAgeVerified} />
-        )}
-      </AnimatePresence>
 
       {/* Main Navigation Header (Sticky Glassmorphic Panel) */}
       <header className="fixed top-0 left-0 w-full px-6 py-4 md:py-6 lg:px-12 flex justify-between items-center z-40 bg-[#07070A50] backdrop-blur-md border-b border-white/5">
