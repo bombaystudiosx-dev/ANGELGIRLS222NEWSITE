@@ -220,4 +220,3 @@ export default function AgeGate({ onVerified }: AgeGateProps) {
     </motion.div>
   );
 }
-,
