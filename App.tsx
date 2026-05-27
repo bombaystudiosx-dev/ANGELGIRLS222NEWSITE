@@ -313,14 +313,13 @@ export default function App() {
           <a 
             href="#" 
             onClick={(e) => { e.preventDefault(); navigateTo('home'); }} 
-            className="font-display text-xl md:text-2xl font-black tracking-normal flex items-center gap-2.5 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity"
           >
-            <span className="w-4 h-4 rounded-full bg-accent relative flex items-center justify-center">
-              <span className="absolute animate-ping inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-            </span>
-            <span className="glow-pink tracking-widest text-white uppercase flex items-baseline">
-              ANGEL GIRLS <span className="text-accent ml-1 italic font-mono font-bold text-lg md:text-xl">222</span>
-            </span>
+            <img 
+              src="/logo.webp" 
+              alt="Angel Girls 222" 
+              className="h-10 md:h-14 w-auto object-contain"
+            />
           </a>
         </div>
 
@@ -485,8 +484,8 @@ export default function App() {
               className="space-y-24 md:space-y-36"
             >
               
-              {/* IMMERSIVE VIDEO LOOP CONTAINER (WORDS REMOVED FOR CLEAN KINETIC LOOK) */}
-              <section className="relative w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,46,136,0.15)] bg-black flex items-center justify-center">
+              {/* IMMERSIVE VIDEO LOOP CONTAINER (FULL SCREEN HERO) */}
+              <section className="relative w-full h-screen -mt-24 overflow-hidden flex items-center justify-center">
                 {!videoError ? (
                   <video
                     autoPlay
@@ -494,19 +493,15 @@ export default function App() {
                     muted
                     playsInline
                     preload="auto"
-                    referrerPolicy="no-referrer"
                     onError={() => {
                       console.warn("Video failed to play/load. Enforcing beautiful local gateway poster fallback.");
                       setVideoError(true);
                     }}
                     onPlay={() => setVideoPlaying(true)}
-                    className="absolute inset-0 w-full h-full object-cover scale-100 transition-opacity duration-700"
-                    style={{ opacity: videoPlaying ? 0.9 : 0 }}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{ opacity: videoPlaying ? 1 : 0 }}
                   >
-                    {/* Source list of several ultra-reliable premium nightscape/las vegas background loop streams */}
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-neon-light-from-a-building-on-the-las-vegas-strip-40244-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-las-vegas-strip-neon-lights-and-casinos-at-night-40348-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-city-lights-at-night-from-above-4435-large.mp4" type="video/mp4" />
+                    <source src="/hero-video.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
                 ) : null}
@@ -514,20 +509,19 @@ export default function App() {
                 {/* Custom animated Ken-Burns image overlay if video hasn't loaded yet or failed completely */}
                 {(!videoPlaying || videoError) && (
                   <div 
-                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000 ease-in-out scale-105 animate-pulse" 
+                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000 ease-in-out" 
                     style={{ 
-                      backgroundImage: `url(${gateBg})`, 
-                      filter: 'brightness(0.6) contrast(1.1) saturate(1.2) hue-rotate(-5deg)' 
+                      backgroundImage: 'url(/hiring-bg.jpg)', 
+                      filter: 'brightness(0.8) contrast(1.1) saturate(1.2)' 
                     }}
                   />
                 )}
                 
-                {/* Radial and Linear twilight neon overlay gradients */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-black/35 pointer-events-none" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-transparent to-[#07070A50] pointer-events-none" />
+                {/* Subtle gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-black/20 pointer-events-none" />
 
                 {/* Highly focused elegant call to actions overlaying the loop video */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-full px-6 flex flex-wrap gap-4 justify-center items-center">
+                <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 w-full px-6 flex flex-wrap gap-4 justify-center items-center">
                   <button
                     onClick={() => navigateTo('booking')}
                     className="px-8 py-3.5 bg-gradient-to-r from-accent to-pink-500 rounded-xl font-mono text-xs tracking-widest uppercase font-black shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:scale-105 transition-all cursor-pointer flex items-center gap-2 text-white"
@@ -971,12 +965,16 @@ export default function App() {
             >
               <div className="space-y-4">
                 <span className="font-mono text-xs tracking-widest text-[#39ff14] font-bold uppercase block">// VEGAS INDEPENDENT CONTRACTING</span>
-                <img
-                  src={gateBg}
-                  alt="Become an Angel Dancer"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-48 object-cover rounded-xl opacity-60 border border-white/10 my-4"
-                />
+                <div 
+                  className="w-full h-64 md:h-80 rounded-xl border border-white/10 my-4 relative overflow-hidden"
+                  style={{
+                    backgroundImage: 'url(/hiring-bg.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-transparent" />
+                </div>
                 <h2 className="font-display text-4xl md:text-5xl font-black tracking-normal text-white">
                   Become an Angel — High-Income Vegas Outcalls
                 </h2>
@@ -1348,9 +1346,11 @@ export default function App() {
         <footer className="mt-24 pt-10 border-t border-white/10 select-text">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 text-left pb-10">
             <div className="md:col-span-4 space-y-4">
-              <span className="font-display font-black text-lg text-white tracking-widest block uppercase animate-pulse">
-                ANGEL GIRLS <span className="text-accent italic font-mono text-lg font-bold">222</span>
-              </span>
+              <img 
+                src="/logo.webp" 
+                alt="Angel Girls 222" 
+                className="h-12 w-auto object-contain"
+              />
               <p className="text-[11px] text-white/40 leading-relaxed font-light">
                 Premium Las Vegas Outcall Dancers and Luxury Companions providing 100% legal adult entertainment and private showgirl dancers to luxury hotels, residential villas, and exclusive party suites. Serving all of Las Vegas Strip, NV.
               </p>
