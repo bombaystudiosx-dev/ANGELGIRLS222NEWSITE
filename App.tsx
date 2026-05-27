@@ -361,11 +361,6 @@ export default function App() {
 
         {/* Action button & Clock utilities (Right aligned) */}
         <div className="flex-1 flex justify-end items-center gap-4">
-          {/* Dynamic ticking universal UTC clock for elite agency security feel */}
-          <div className="hidden lg:flex items-center gap-2 font-mono text-[9px] text-white/30 tracking-widest bg-white/5 border border-white/5 px-3 py-1.5 rounded-full">
-            <Clock className="w-3.5 h-3.5 text-[#0ad6ff]" />
-            <span>{timeStr || 'CALIBRATING SECURITY CLOCK...'}</span>
-          </div>
 
           <button 
             onClick={() => navigateTo('booking')} 
@@ -485,37 +480,25 @@ export default function App() {
             >
               
               {/* IMMERSIVE VIDEO LOOP CONTAINER (FULL SCREEN HERO) */}
-              <section className="relative w-full h-screen -mt-24 overflow-hidden flex items-center justify-center">
-                {!videoError ? (
+                      <section className="relative w-full h-screen overflow-hidden">
+                (
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
                     preload="auto"
-                    onError={() => {
-                      console.warn("Video failed to play/load. Enforcing beautiful local gateway poster fallback.");
-                      setVideoError(true);
-                    }}
+                    
                     onPlay={() => setVideoPlaying(true)}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={{ opacity: videoPlaying ? 1 : 0 }}
+                    className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 1 }}
                   >
                     <source src="/hero-video.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                ) : null}
+                )
                 
                 {/* Custom animated Ken-Burns image overlay if video hasn't loaded yet or failed completely */}
-                {(!videoPlaying || videoError) && (
-                  <div 
-                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000 ease-in-out" 
-                    style={{ 
-                      backgroundImage: 'url(/hiring-bg.jpg)', 
-                      filter: 'brightness(0.8) contrast(1.1) saturate(1.2)' 
-                    }}
-                  />
-                )}
+                
                 
                 {/* Subtle gradient overlay for text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-black/20 pointer-events-none" />
