@@ -80,10 +80,20 @@ export default function CustomCursor() {
 
   return (
     <>
+      {/* Custom dancer cursor via CSS */}
+      <style>{`
+        body, html, * {
+          cursor: url('/cursor-dancer.png') 16 16, auto !important;
+        }
+        a, button, [role="button"], .interactive-knob, .interactive-project {
+          cursor: url('/cursor-dancer.png') 16 16, pointer !important;
+        }
+      `}</style>
+      
       {/* 1. Instant Inner Target Dot */}
       <motion.div
         id="cursor-dot"
-        className="fixed w-2 h-2 rounded-full bg-[#FF2E88] pointer-events-none z-50 mix-blend-screen"
+        className="fixed w-3 h-3 rounded-full bg-[#FF2E88] pointer-events-none z-50 mix-blend-screen"
         style={{
           x: cursorX,
           y: cursorY,
@@ -91,7 +101,7 @@ export default function CustomCursor() {
           translateY: '-50%',
         }}
         animate={{
-          scale: hoveredState !== 'default' ? 0.4 : 1,
+          scale: hoveredState !== 'default' ? 0.5 : 1,
           backgroundColor: hoveredState === 'default' ? '#FF2E88' : '#0ad6ff',
         }}
         transition={{ type: 'spring', stiffness: 450, damping: 28 }}

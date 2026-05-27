@@ -11,6 +11,7 @@ import TextReveal from './components/TextReveal';
 import GirlsShowcase, { eliteGirls } from './components/GirlsShowcase';
 import BookingForm from './components/BookingForm';
 import LocationSEOView from './components/LocationSEOView';
+import AgeGate from './components/AgeGate';
 import { ParticleConfig, ActiveView, BookingState, HiringApplication, Girl } from './types';
 // @ts-ignore
 import gateBg from './assets/images/gate_background_1779823298841.png';
@@ -54,10 +55,6 @@ export default function App() {
   const [activeView, setActiveView] = useState<ActiveView>('home');
   const [ageVerified, setAgeVerified] = useState<boolean | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [birthYear, setBirthYear] = useState('');
-  const [birthMonth, setBirthMonth] = useState('');
-  const [birthDay, setBirthDay] = useState('');
-  const [ageGateError, setAgeGateError] = useState('');
 
   // 3. Selection of Dancers & Active Booking State
   const [selectedGirlIds, setSelectedGirlIds] = useState<string[]>([]);
@@ -226,47 +223,9 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
-  // Age gate click events
-  const handleVerifyBirthday = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!birthYear || !birthMonth || !birthDay) {
-      setAgeGateError('Please enter your complete birth date.');
-      return;
-    }
-
-    const yearVal = parseInt(birthYear, 10);
-    const monthVal = parseInt(birthMonth, 10);
-    const dayVal = parseInt(birthDay, 10);
-
-    if (isNaN(yearVal) || isNaN(monthVal) || isNaN(dayVal)) {
-      setAgeGateError('Please enter valid numeric birth entries.');
-      return;
-    }
-
-    const currentYear = new Date().getFullYear();
-    if (yearVal < 1920 || yearVal > currentYear) {
-      setAgeGateError(`Please enter a valid year between 1920 and ${currentYear}.`);
-      return;
-    }
-
-    const today = new Date();
-    let age = today.getFullYear() - yearVal;
-    const m = (today.getMonth() + 1) - monthVal;
-    if (m < 0 || (m === 0 && today.getDate() < dayVal)) {
-      age--;
-    }
-
-    if (age >= 21) {
-      setAgeGateError('');
-      localStorage.setItem('ag222_age_verified', 'true');
-      setAgeVerified(true);
-    } else {
-      setAgeGateError(`Access Denied: Under Las Vegas NV regulation, you must be 21 or older to enter. You are currently ${age} years old.`);
-    }
-  };
-
-  const handleDeclineAge = () => {
-    window.location.href = 'https://www.google.com';
+  // Age verification handler
+  const handleAgeVerified = () => {
+    setAgeVerified(true);
   };
 
   // Booking submit pipeline
@@ -303,6 +262,15 @@ export default function App() {
     navigateTo('home');
   };
 
+  // Don't render the site until age is verified
+  if (ageVerified !== true) {
+    return (
+      <div className="relative min-h-screen bg-[#07070A] text-white font-sans overflow-x-hidden selection:bg-accent selection:text-white">
+        <AgeGate onVerified={handleAgeVerified} />
+      </div>
+    );
+  }
+
   return (
     <div className="relative min-h-screen bg-[#07070A] text-white font-sans overflow-x-hidden selection:bg-accent selection:text-white">
       
@@ -337,157 +305,6 @@ export default function App() {
       {/* Real-time Ambient Darkening Vignette Layer */}
       <div className="fixed inset-0 w-full h-full pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#07070a75] to-[#07070Ae6] -z-10" />
 
-      {/* Interactive Age Verification gate Blocking Layer */}
-      <AnimatePresence>
-        {ageVerified === false && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 w-full h-full z-[100] flex items-center justify-center px-6 relative overflow-hidden"
-          >
-            {/* Immersive background image from user input */}
-            <div 
-              className="absolute inset-0 w-full h-full bg-cover bg-center -z-20 select-none scale-105" 
-              style={{ backgroundImage: `url(${gateBg})` }} 
-            />
-            {/* Highly customized atmospheric dark vignette/glass overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/75 to-neutral-950/90 backdrop-blur-xl -z-10" />
-
-            <div className="max-w-md w-full glass-panel border border-[#FF2E88]/20 bg-neutral-950/80 rounded-2xl p-8 text-center space-y-6 relative shadow-[0_0_50px_rgba(255,46,136,0.15)]">
-              {/* Highlight branding glow */}
-              <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full bg-accent/25 blur-2xl pointer-events-none" />
-              
-              <div className="space-y-3">
-                <span className="font-display text-4xl tracking-widest text-[#FF2E88] font-black block glow-pink uppercase">
-                  ANGEL GIRLS 222
-                </span>
-                <span className="font-mono text-[9px] tracking-[0.3em] font-bold text-white/40 uppercase block">
-                  Las Vegas Outcall Companion Matrix
-                </span>
-              </div>
-
-              <div className="h-[1px] bg-gradient-to-r from-transparent via-[#FF2E88]/30 to-transparent" />
-
-              <div className="space-y-2">
-                <p className="font-display text-lg font-bold text-white leading-snug uppercase tracking-wide">
-                  Age Verification Required
-                </p>
-                <p className="text-xs text-white/60 leading-relaxed font-light">
-                  You must be <span className="text-[#FF2E88] font-bold">21 or older</span> to enter Angel Girls 222. Under Las Vegas NV regulations, booking records require valid birth date entry.
-                </p>
-              </div>
-
-              {/* Birthday Entry Form Container */}
-              <form onSubmit={handleVerifyBirthday} className="space-y-5 text-left pt-2">
-                <div>
-                  <label htmlFor="birth-month" className="font-mono text-[10px] uppercase font-bold tracking-widest text-white/40 mb-2 block">
-                    Your Birth Date
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {/* Month Dropdown */}
-                    <div>
-                      <select
-                        id="birth-month"
-                        value={birthMonth}
-                        aria-label="Birth Month"
-                        onChange={(e) => setBirthMonth(e.target.value)}
-                        className="w-full bg-neutral-900/90 border border-white/10 text-white text-xs rounded-xl px-2 py-3.5 focus:border-[#FF2E88] focus:ring-1 focus:ring-[#FF2E88]/50 transition-all focus:outline-none cursor-pointer font-sans"
-                      >
-                        <option value="" disabled className="text-white/30 bg-neutral-900">Month</option>
-                        {[
-                          { name: 'January', val: '1' },
-                          { name: 'February', val: '2' },
-                          { name: 'March', val: '3' },
-                          { name: 'April', val: '4' },
-                          { name: 'May', val: '5' },
-                          { name: 'June', val: '6' },
-                          { name: 'July', val: '7' },
-                          { name: 'August', val: '8' },
-                          { name: 'September', val: '9' },
-                          { name: 'October', val: '10' },
-                          { name: 'November', val: '11' },
-                          { name: 'December', val: '12' }
-                        ].map((m) => (
-                          <option key={m.val} value={m.val} className="bg-neutral-950 text-white font-mono">{m.name}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Day Dropdown */}
-                    <div>
-                      <select
-                        id="birth-day"
-                        value={birthDay}
-                        aria-label="Birth Day"
-                        onChange={(e) => setBirthDay(e.target.value)}
-                        className="w-full bg-neutral-900/90 border border-white/10 text-white text-xs rounded-xl px-2 py-3.5 focus:border-[#FF2E88] focus:ring-1 focus:ring-[#FF2E88]/50 transition-all focus:outline-none cursor-pointer font-sans"
-                      >
-                        <option value="" disabled className="text-white/30 bg-neutral-900">Day</option>
-                        {Array.from({ length: 31 }, (_, i) => (
-                          <option key={i + 1} value={i + 1} className="bg-neutral-950 text-white font-mono">
-                            {String(i + 1).padStart(2, '0')}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    {/* Year Input */}
-                    <div>
-                      <input
-                        id="birth-year"
-                        type="text"
-                        inputMode="numeric"
-                        pattern="[0-9]*"
-                        maxLength={4}
-                        placeholder="YYYY"
-                        value={birthYear}
-                        aria-label="Birth Year"
-                        onChange={(e) => {
-                          const val = e.target.value.replace(/\D/g, '');
-                          setBirthYear(val);
-                        }}
-                        className="w-full bg-neutral-900/90 border border-white/10 text-white text-xs text-center rounded-xl px-2 py-3.5 focus:border-[#FF2E88] focus:ring-1 focus:ring-[#FF2E88]/50 transition-all focus:outline-none font-mono"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Validation Error Feedback */}
-                {ageGateError && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-[#FF2E88] font-mono text-[10px] leading-relaxed border border-[#FF2E88]/30 bg-[#FF2E88]/10 py-2.5 px-3.5 rounded-xl text-center"
-                  >
-                    {ageGateError}
-                  </motion.div>
-                )}
-
-                <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={handleDeclineAge}
-                    className="flex-1 py-4.5 rounded-xl bg-white/5 border border-white/5 text-white/50 hover:text-white/80 font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer hover:bg-white/10 order-2 sm:order-1"
-                  >
-                    Exit Gate
-                  </button>
-                  <button
-                    type="submit"
-                    className="flex-1 py-4.5 rounded-xl bg-gradient-to-r from-accent to-pink-500 text-white font-mono text-xs font-black uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-accent/20 hover:scale-102 glow-pink order-1 sm:order-2 text-center"
-                  >
-                    Enter Matrix
-                  </button>
-                </div>
-              </form>
-
-              <p className="text-[9px] text-white/30 font-mono leading-normal select-none">
-                By entering your birth date, you certify compliance with municipal Clark County / Las Vegas outcall escort entertainment guidelines.
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Main Navigation Header (Sticky Glassmorphic Panel) */}
       <header className="fixed top-0 left-0 w-full px-6 py-4 md:py-6 lg:px-12 flex justify-between items-center z-40 bg-[#07070A50] backdrop-blur-md border-b border-white/5">
         
@@ -496,14 +313,13 @@ export default function App() {
           <a 
             href="#" 
             onClick={(e) => { e.preventDefault(); navigateTo('home'); }} 
-            className="font-display text-xl md:text-2xl font-black tracking-normal flex items-center gap-2.5 hover:opacity-90 transition-opacity"
+            className="flex items-center gap-2.5 hover:opacity-90 transition-opacity"
           >
-            <span className="w-4 h-4 rounded-full bg-accent relative flex items-center justify-center">
-              <span className="absolute animate-ping inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-            </span>
-            <span className="glow-pink tracking-widest text-white uppercase flex items-baseline">
-              ANGEL GIRLS <span className="text-accent ml-1 italic font-mono font-bold text-lg md:text-xl">222</span>
-            </span>
+            <img 
+              src="/logo.webp" 
+              alt="Angel Girls 222" 
+              className="h-10 md:h-14 w-auto object-contain"
+            />
           </a>
         </div>
 
@@ -545,11 +361,6 @@ export default function App() {
 
         {/* Action button & Clock utilities (Right aligned) */}
         <div className="flex-1 flex justify-end items-center gap-4">
-          {/* Dynamic ticking universal UTC clock for elite agency security feel */}
-          <div className="hidden lg:flex items-center gap-2 font-mono text-[9px] text-white/30 tracking-widest bg-white/5 border border-white/5 px-3 py-1.5 rounded-full">
-            <Clock className="w-3.5 h-3.5 text-[#0ad6ff]" />
-            <span>{timeStr || 'CALIBRATING SECURITY CLOCK...'}</span>
-          </div>
 
           <button 
             onClick={() => navigateTo('booking')} 
@@ -668,49 +479,32 @@ export default function App() {
               className="space-y-24 md:space-y-36"
             >
               
-              {/* IMMERSIVE VIDEO LOOP CONTAINER (WORDS REMOVED FOR CLEAN KINETIC LOOK) */}
-              <section className="relative w-full aspect-video md:aspect-[21/9] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_80px_rgba(255,46,136,0.15)] bg-black flex items-center justify-center">
-                {!videoError ? (
+              {/* IMMERSIVE VIDEO LOOP CONTAINER (FULL SCREEN HERO) */}
+                      <section className="relative w-full h-screen overflow-hidden">
+                (
                   <video
                     autoPlay
                     loop
                     muted
                     playsInline
                     preload="auto"
-                    referrerPolicy="no-referrer"
-                    onError={() => {
-                      console.warn("Video failed to play/load. Enforcing beautiful local gateway poster fallback.");
-                      setVideoError(true);
-                    }}
+                    
                     onPlay={() => setVideoPlaying(true)}
-                    className="absolute inset-0 w-full h-full object-cover scale-100 transition-opacity duration-700"
-                    style={{ opacity: videoPlaying ? 0.9 : 0 }}
+                    className="absolute inset-0 w-full h-full object-cover" style={{ opacity: 1 }}
                   >
-                    {/* Source list of several ultra-reliable premium nightscape/las vegas background loop streams */}
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-neon-light-from-a-building-on-the-las-vegas-strip-40244-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-las-vegas-strip-neon-lights-and-casinos-at-night-40348-large.mp4" type="video/mp4" />
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-city-lights-at-night-from-above-4435-large.mp4" type="video/mp4" />
+                    <source src="/hero-video.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                   </video>
-                ) : null}
+                )
                 
                 {/* Custom animated Ken-Burns image overlay if video hasn't loaded yet or failed completely */}
-                {(!videoPlaying || videoError) && (
-                  <div 
-                    className="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000 ease-in-out scale-105 animate-pulse" 
-                    style={{ 
-                      backgroundImage: `url(${gateBg})`, 
-                      filter: 'brightness(0.6) contrast(1.1) saturate(1.2) hue-rotate(-5deg)' 
-                    }}
-                  />
-                )}
                 
-                {/* Radial and Linear twilight neon overlay gradients */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-black/35 pointer-events-none" />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-transparent via-transparent to-[#07070A50] pointer-events-none" />
+                
+                {/* Subtle gradient overlay for text readability */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-black/20 pointer-events-none" />
 
                 {/* Highly focused elegant call to actions overlaying the loop video */}
-                <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-full px-6 flex flex-wrap gap-4 justify-center items-center">
+                <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 w-full px-6 flex flex-wrap gap-4 justify-center items-center">
                   <button
                     onClick={() => navigateTo('booking')}
                     className="px-8 py-3.5 bg-gradient-to-r from-accent to-pink-500 rounded-xl font-mono text-xs tracking-widest uppercase font-black shadow-lg shadow-accent/25 hover:shadow-accent/40 hover:scale-105 transition-all cursor-pointer flex items-center gap-2 text-white"
@@ -1154,12 +948,16 @@ export default function App() {
             >
               <div className="space-y-4">
                 <span className="font-mono text-xs tracking-widest text-[#39ff14] font-bold uppercase block">// VEGAS INDEPENDENT CONTRACTING</span>
-                <img
-                  src={gateBg}
-                  alt="Become an Angel Dancer"
-                  referrerPolicy="no-referrer"
-                  className="w-full h-48 object-cover rounded-xl opacity-60 border border-white/10 my-4"
-                />
+                <div 
+                  className="w-full h-64 md:h-80 rounded-xl border border-white/10 my-4 relative overflow-hidden"
+                  style={{
+                    backgroundImage: 'url(/hiring-bg.jpg)',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center'
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#07070A] via-transparent to-transparent" />
+                </div>
                 <h2 className="font-display text-4xl md:text-5xl font-black tracking-normal text-white">
                   Become an Angel — High-Income Vegas Outcalls
                 </h2>
@@ -1531,9 +1329,11 @@ export default function App() {
         <footer className="mt-24 pt-10 border-t border-white/10 select-text">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 text-left pb-10">
             <div className="md:col-span-4 space-y-4">
-              <span className="font-display font-black text-lg text-white tracking-widest block uppercase animate-pulse">
-                ANGEL GIRLS <span className="text-accent italic font-mono text-lg font-bold">222</span>
-              </span>
+              <img 
+                src="/logo.webp" 
+                alt="Angel Girls 222" 
+                className="h-12 w-auto object-contain"
+              />
               <p className="text-[11px] text-white/40 leading-relaxed font-light">
                 Premium Las Vegas Outcall Dancers and Luxury Companions providing 100% legal adult entertainment and private showgirl dancers to luxury hotels, residential villas, and exclusive party suites. Serving all of Las Vegas Strip, NV.
               </p>
